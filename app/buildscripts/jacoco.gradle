@@ -30,29 +30,22 @@ project.afterEvaluate {
             def testTaskName = "test${sourceName.capitalize()}UnitTest"
 
             // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
-            task "${testTaskName}Coverage" (type:JacocoReport, dependsOn: "$testTaskName") {
+            task "${testTaskName}Coverage"(type: JacocoReport, dependsOn: "$testTaskName") {
                 group = "Reporting"
                 description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
 
-                classDirectories = fileTree(
-                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
-                        excludes: [
-                            '**/R.class',
-                            '**/R$*.class',
-                            '**/*$ViewInjector*.*',
-                            '**/*$ViewBinder*.*',
-                            '**/BuildConfig.*',
-                            '**/Manifest*.*'
-                        ]
-                )
-
-                def coverageSourceDirs = [
-                        "src/main/java",
-                        "src/$productFlavorName/java",
-                        "src/$buildTypeName/java"
-                ]
-                additionalSourceDirs = files(coverageSourceDirs)
-                sourceDirectories = files(coverageSourceDirs)
+                def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+                                  '**/*Test*.*', 'android/**/*.*',
+                                  '**/*_MembersInjector.class',
+                                  '**/Dagger*Component.class',
+                                  '**/Dagger*Component$Builder.class',
+                                  '**/*_*Factory.class',
+                                  '**/*ComponentImpl.class',
+                                  '**/*SubComponentBuilder.class']
+                def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+                def mainSrc = "${project.projectDir}/src/main/java"
+                sourceDirectories = files(mainSrc)
+                classDirectories = files([debugTree])
                 executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
 
                 reports {

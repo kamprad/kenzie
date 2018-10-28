@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -28,10 +30,59 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.0.0"
+    def room_version = "2.0.0"
+    def nav_version = "1.0.0-alpha06"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.core:core-ktx:1.0.0'
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version" // use kapt for Kotlin
+    // optional - Test helpers for LiveData
+    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
+    // Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    //TODO: Keep android navigation up to date
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version" // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
+    // optional - Test helpers
+    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$nav_version" // use -ktx for Kotlin
+
+    implementation 'com.google.dagger:dagger:2.16'
+    implementation 'com.google.dagger:dagger-android-support:2.16' // if you use the support libraries
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+    kapt 'com.google.dagger:dagger-android-processor:2.16'
+
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+
+    // TODO: This might not be so useful
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-core:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-attr:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-measurement:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-disk:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-recorder:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-phoenix:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-crash:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-shared-preferences:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-geiger-counter:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-timber:0.9.24'
+    debugImplementation 'com.willowtreeapps.hyperion:hyperion-build-config:0.9.24'
+
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.mockito:mockito-core:2.22.0"
+    androidTestImplementation 'androidx.test.ext:junit:1.0.0'
 }
